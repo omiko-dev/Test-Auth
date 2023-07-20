@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -6,6 +7,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using testauth.Models;
+using testauth.Services;
 
 namespace testauth.Controllers
 {
@@ -16,10 +18,12 @@ namespace testauth.Controllers
 
         public static User user = new User();
         private readonly IConfiguration _configuration;
+        private readonly IUserInfoRepository _userInfo;
 
-        public AuthController(IConfiguration configuration)
+        public AuthController(IConfiguration configuration, IUserInfoRepository userInfo)
         {
             _configuration = configuration;
+            _userInfo = userInfo;
         }
 
         [HttpPost("Register")]
@@ -32,6 +36,7 @@ namespace testauth.Controllers
 
             user.PasswordHash = PasswordHash;
             user.Name = _user.Name;
+            user.Email = _user.Email;
             user.Role = _user.Role;
 
             return Ok(user);
@@ -56,13 +61,25 @@ namespace testauth.Controllers
         }
 
 
+        [HttpGet("User"), Authorize]
+        public ActionResult<string> GetMe()
+        {
+
+            var userInfo = _userInfo.GetUserInfo();
+
+            return Ok(userInfo);
+
+        }
+
+
 
         private string token(User user)
         {
 
             List<Claim> claims = new List<Claim>()
             {
-                new Claim("name", user.Name),
+                new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.Role)
             };
 

@@ -37,7 +37,7 @@ namespace testauth.Controllers
             user.PasswordHash = PasswordHash;
             user.Name = _user.Name;
             user.Email = _user.Email;
-            user.Role = _user.Role;
+            user.Role = "user";
 
             return Ok(user);
 

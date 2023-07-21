@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using testauth.Models;
 
 namespace testauth.Services
 {
     public interface IUserInfoRepository
     {
 
-        public ActionResult<List<string>> GetUserInfo();
+        public ActionResult<BackUser>? GetUserInfo();
     }
 }

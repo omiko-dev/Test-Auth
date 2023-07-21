@@ -11,5 +11,11 @@
 
         public string Role { get; set; } = string.Empty;
 
+        public string RefreshToken { get; set; } = string.Empty;
+
+        public DateTime TokenCreate { get; set; }
+
+        public DateTime TokenExpires { get; set; }
+
     }
 }

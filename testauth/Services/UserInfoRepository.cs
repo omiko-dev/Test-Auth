@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Runtime.InteropServices;
 using System.Security.Claims;
+using testauth.Models;
 
 namespace testauth.Services
 {
@@ -13,7 +14,7 @@ namespace testauth.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public ActionResult<List<string>> GetUserInfo()
+        public ActionResult<BackUser>? GetUserInfo()
         {
 
             if(_httpContextAccessor.HttpContext is not null)
@@ -22,7 +23,7 @@ namespace testauth.Services
 
                 var userName = user?.FindFirstValue(ClaimTypes.Name);
                 var userEmail = user?.FindFirstValue(ClaimTypes.Email);
-                var userInfo = new List<string> { userName, userEmail };
+                var userInfo = new BackUser { Name = userName, Email = userEmail };
 
                 return userInfo;
             }
